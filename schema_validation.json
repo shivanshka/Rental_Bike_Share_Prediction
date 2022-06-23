@@ -1,0 +1,22 @@
+{   "SampleFileName" : "Rental_Bike_Share_Data_20180101_120000.csv",
+    "LengthOfDateStampInFile" : 8,
+    "LengthOfTimeStampInFile" : 6,
+    "NumberofColumns" : 14,
+    "Columns" : {
+            "date"  : "datetime",
+            "month" : "int",
+            "year"  : "int",
+            "season" : "varchar",
+            "weekday" : "int",
+            "is_holiday" : "int",
+            "temperature(in celcius)" : "float",
+            "rel. temperature(in celcius)" : "float",
+            "windspeed(in kmph)" : "float",
+            "rel. humidity" : "float",
+            "condition" : "varchar",
+            "casual" : "int",
+            "member" : "int",
+            "total_count" : "int"
+    } 
+
+}

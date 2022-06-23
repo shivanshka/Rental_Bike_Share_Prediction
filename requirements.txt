@@ -1,3 +1,7 @@
+numpy
+pandas
+sklearn
 flask
 flask-cors
 gunicorn
+-e .
