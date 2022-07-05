@@ -4,4 +4,6 @@ sklearn
 flask
 flask-cors
 gunicorn
+PyYAML
+dill
 -e .
