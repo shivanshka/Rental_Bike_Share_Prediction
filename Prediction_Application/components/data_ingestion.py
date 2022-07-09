@@ -1,10 +1,12 @@
 from ast import expr_context
+from operator import index
 from Prediction_Application.logger import logging
 from Prediction_Application.exception import ApplicationException
 from Prediction_Application.entity.config_entity import DataIngestionConfig
 from Prediction_Application.entity.artifact_entity import DataIngestionArtifact
-#import pandas as pd
-#import numpy as np
+from Prediction_Application.components.dbOperation import MongoDB
+import pandas as pd
+import numpy as np
 import os,sys
 import zipfile
 from six.moves import urllib
@@ -14,8 +16,12 @@ from six.moves import urllib
 class DataIngestion:
     def __init__(self,data_ingestion_config : DataIngestionConfig):
         try:
-            logging.info(f"{'*'*20} Data Ingestion log started {'*'*20}")
+            logging.info(f"\n{'*'*20} Data Ingestion log started {'*'*20}\n")
             self.data_ingestion_config = data_ingestion_config
+
+            # Creating connection with the DB
+            self.db = MongoDB()
+
         except Exception as e:
             raise ApplicationException(e,sys) from e
 
@@ -68,7 +74,55 @@ class DataIngestion:
 
     def data_merge_and_split(self):
         try:
-            data_ingestion_artifact = DataIngestionArtifact()
+            raw_data_dir = self.data_ingestion_config.raw_data_dir  # Location for extracted data files
+            
+            file_name = os.listdir(raw_data_dir)[0]
+            data_file_path = os.path.join(raw_data_dir,file_name)
+            
+            # Creating collection in mongoDb for dumping data
+            self.db.create_and_check_collection()
+            
+            # Reading each data files and dumping it into DB
+            for file in os.listdir(data_file_path):
+                data = pd.read_csv(os.path.join(data_file_path,file))
+                data_dict = data.to_dict("records")
+                logging.info(f"Inserting file: [{file}] into DB")
+                self.db.insertall(data_dict)
+
+            # fetching the data set from DB
+            dataframe = self.db.fetch_df()
+            dataframe.drop(columns = "_id",inplace=True)
+
+            # Splitting the dataset into train and test data based on date indexing
+            train_set = dataframe.loc[dataframe["date"] <= '2022-01-31']
+            test_set = dataframe.loc[(dataframe["date"] >= '2022-02-01') & (dataframe["date"] <= '2022-03-31')]
+
+            self.db.create_and_check_collection(coll_name="Training")
+            self.db.insertall(train_set.to_dict("records"))
+
+            self.db.create_and_check_collection(coll_name="Test")
+            self.db.insertall(test_set.to_dict("records"))
+            
+            # Setting paths for train and test data
+            train_file_path = os.path.join(self.data_ingestion_config.ingested_train_dir,"train.csv")
+            test_file_path = os.path.join(self.data_ingestion_config.ingested_test_dir,"test.csv")
+
+            if train_set is not None:
+                os.makedirs(self.data_ingestion_config.ingested_train_dir,exist_ok=True)
+                logging.info(f"Exporting training dataset to file: [{train_file_path}]")
+                train_set.to_csv(train_file_path,index=False)
+
+            if test_set is not None:
+                os.makedirs(self.data_ingestion_config.ingested_test_dir,exist_ok=True)
+                logging.info(f"Exporting test dataset to file: [{test_file_path}]")
+                test_set.to_csv(test_file_path,index=False)
+
+
+            data_ingestion_artifact = DataIngestionArtifact(train_file_path=train_file_path,
+                                                            test_file_path=test_file_path,
+                                                            is_ingested=True,
+                                                            message="Data ingestion completed successfully")
+            logging.info(f"Data Ingestion Artifact: [{data_ingestion_artifact}]")
             return data_ingestion_artifact
         except Exception as e:
             raise ApplicationException(e,sys) from e
@@ -78,10 +132,10 @@ class DataIngestion:
         try:
             tgz_file_path = self.download_data()
             self.extract_tgz_file(tgz_file_path=tgz_file_path)
-            #return self.data_merge_and_split()
+            return self.data_merge_and_split()
         except Exception as e:
             raise ApplicationException(e,sys) from e
     
     def __del__(self):
-        logging.info(f"{'*'*20} Data Ingestion log completed {'*'*20}")
+        logging.info(f"\n{'*'*20} Data Ingestion log completed {'*'*20}\n")
 

@@ -40,11 +40,20 @@ DATA_TRANSFORMATION_TRAIN_DIR_NAME_KEY = "transformed_train_dir"
 DATA_TRANSFORMATION_TEST_DIR_NAME_KEY = "transformed_test_dir"
 DATA_TRANSFORMATION_PREPROCESSING_DIR_KEY = "preprocessing_dir"
 DATA_TRANSFORMATION_PREPROCESSING_FILE_NAME_KEY = "preprocessed_object_file_name"
+DATA_TRANSFORMATION_FEATURE_ENGINEERING_FILE_NAME_KEY ="feature_engineering_object_file_name"
 
 DATASET_SCHEMA_COLUMNS_KEY = "Columns"
+DATE_COLUMN_KEY = "date_columns"
 NUMERICAL_COLUMN_KEY = "numerical_columns"
 CATEGORICAL_COLUMN_KEY = "categorical_columns"
 TARGET_COLUMN_KEY = "target_column"
+
+# Database related variables
+DATABASE_CLIENT_URL_KEY = "mongodb+srv://rentalbike:rental123@bike-application.60cxb.mongodb.net/?retryWrites=true&w=majority"
+DATABASE_NAME_KEY = "Rental_Bike_Share_DB"
+DATABASE_COLLECTION_NAME_KEY = "Bike_Data"
+DATABASE_TRAINING_COLLECTION_NAME_KEY = "Training"
+DATABASE_TEST_COLLECTION_NAME_KEY = "Test"
 
 # Model Training related variables
 MODEL_TRAINER_CONFIG_KEY = "model_trainer_config"

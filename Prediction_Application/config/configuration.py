@@ -1,4 +1,4 @@
-from Prediction_Application.entity.config_entity import DataIngestionConfig, DataTransformationConfig,DataValidationConfig,\
+from Prediction_Application.entity.config_entity import DataIngestionConfig, DataTransformationConfig,DataValidationConfig, DatabaseConfig,\
     ModelTrainerConfig, TrainingPipelineConfig
 from Prediction_Application.constant import *
 from Prediction_Application.util.util import read_yaml_file
@@ -88,6 +88,10 @@ class Configuration:
                                 data_transformation_config[DATA_TRANSFORMATION_PREPROCESSING_DIR_KEY],
                                 data_transformation_config[DATA_TRANSFORMATION_PREPROCESSING_FILE_NAME_KEY])
 
+            feature_engineering_object_file_path = os.path.join(data_transformation_artifact_dir,
+                                data_transformation_config[DATA_TRANSFORMATION_PREPROCESSING_DIR_KEY],
+                                data_transformation_config[DATA_TRANSFORMATION_FEATURE_ENGINEERING_FILE_NAME_KEY])
+
             transformed_train_dir = os.path.join(data_transformation_artifact_dir,
                                 data_transformation_config[DATA_TRANSFORMATION_DIR_NAME_KEY],
                                 data_transformation_config[DATA_TRANSFORMATION_TRAIN_DIR_NAME_KEY])
@@ -98,11 +102,30 @@ class Configuration:
 
             data_transformation_config = DataTransformationConfig(transformed_train_dir=transformed_train_dir,
                                                     transformed_test_dir=transformed_test_dir,
-                                                    preprocessed_object_file_path=preprocessed_object_file_path)
+                                                    preprocessed_object_file_path=preprocessed_object_file_path,
+                                                    feature_engineering_object_file_path=feature_engineering_object_file_path)
             
             
             logging.info(f"Data Transformation Config: {data_transformation_config}")
             return data_transformation_config
+        except Exception as e:
+            raise ApplicationException(e,sys) from e
+
+    def get_database_config(self) -> DatabaseConfig:
+        try:
+            database_config = self.config_info[DATABASE_CONFIG_KEY]
+            client_url = database_config[DATABASE_CLIENT_URL_KEY]
+            database_name = database_config[DATABASE_NAME_KEY]
+            collection_name = database_config[DATABASE_COLLECTION_NAME_KEY]
+            training_collection_name = database_config[DATABASE_TRAINING_COLLECTION_NAME_KEY]
+            test_collection_name = database_config[DATABASE_TEST_COLLECTION_NAME_KEY]
+
+            database_config = DatabaseConfig(client_url=client_url, database_name=database_name, 
+                                             collection_name=collection_name, 
+                                             training_collection_name=training_collection_name, 
+                                             test_collection_name=test_collection_name)
+            logging.info(f"Database(MongoDB) Config: {database_config}")
+            return database_config
         except Exception as e:
             raise ApplicationException(e,sys) from e
 

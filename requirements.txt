@@ -6,4 +6,7 @@ flask-cors
 gunicorn
 PyYAML
 dill
+pymongo[srv]
+dnspython
+evidently
 -e .

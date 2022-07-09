@@ -1,39 +1,45 @@
-SampleFileName : "Rental_Bike_Share_Data_20180101_120000.csv",
+SampleFileName : Rental_Bike_Share_Data_20180101_120000.csv
 LengthOfDateStampInFile : 8
 LengthOfTimeStampInFile : 6
-NumberofColumns : 16
+NumberofColumns : 15
 Columns : 
-  date  : "datetime",
-  month : "int",
-  year  : "int",
-  hour  : "int",
-  season : "category",
-  weekday : "int",
-  is_holiday : "int",
-  is_working : "int",
-  temperature(in celcius) : "float",
-  relative temperature(in celcius) : "float",
-  windspeed(in kmph) : "float",
-  humidity : "float",
-  description : "varchar",
-  casual : "int",
-  member : "int",
+  date  : datetime
+  month : int
+  year  : int
+  hour  : int
+  season : category
+  weekday : category
+  is_holiday : category
+  working_day : category
+  temperature(in celcius) : float
+  relative temperature(in celcius) : float
+  windspeed(in kmph) : float
+  humidity : float
+  description : varchar
+  casual : int
+  member : int
   
 target_column:  
-  total_count : "int"
+  total_count : int
+
+date_columns:
+  - date
+  - year
+  - month
+  - hour
 
 numerical_columns:
-  - month
-  - year
-  - hour
-  - weekday
-  - is_holiday
-  - is_working
-  - temperature(in celcius)
-  - relative temperature(in celcius)
-  - windspeed(in kmph)
+  - casual
+  - member
+  - temp
+  - r_temp
+  - wind
   - humidity
-
+  
 categorical_columns:
   - season
-  - description  
+  - weekday
+  - is_holiday
+  - working_day
+  - weather_sit
+  - is_covid

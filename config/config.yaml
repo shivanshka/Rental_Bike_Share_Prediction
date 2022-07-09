@@ -3,7 +3,7 @@ training_pipeline_config:
   artifact_dir: artifact
 
 data_ingestion_config:
-  dataset_download_url: "https://github.com/shivanshka/dataset/blob/main/Rental%20bike%20demand%20data.zip?raw=true"
+  dataset_download_url: https://github.com/shivanshka/dataset/blob/main/Rental%20bike%20demand%20data.zip?raw=true
   raw_data_dir: raw_data
   tgz_download_dir: tgz_data
   ingested_dir: ingested_data
@@ -21,6 +21,7 @@ data_transformation_config:
   transformed_train_dir: train
   transformed_test_dir: test
   preprocessing_dir: preprocessed
+  feature_engineering_object_file_name: feat_eng.pkl
   preprocessed_object_file_name: preprocessed.pkl
 
 model_trainer_config:
