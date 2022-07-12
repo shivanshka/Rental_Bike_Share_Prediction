@@ -41,6 +41,8 @@ def load_object(file_path:str):
 
 def save_data(file_path:str, data:pd.DataFrame):
     try:
+        dir_path = os.path.dirname(file_path)
+        os.makedirs(dir_path, exist_ok=True)
         data.to_csv(file_path,index = None)
     except Exception as e:
         raise ApplicationException(e,sys) from e

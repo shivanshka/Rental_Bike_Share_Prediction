@@ -47,9 +47,10 @@ DATE_COLUMN_KEY = "date_columns"
 NUMERICAL_COLUMN_KEY = "numerical_columns"
 CATEGORICAL_COLUMN_KEY = "categorical_columns"
 TARGET_COLUMN_KEY = "target_column"
+PIKLE_FOLDER_NAME_KEY = "prediction_files"
 
 # Database related variables
-DATABASE_CLIENT_URL_KEY = "mongodb+srv://rentalbike:rental123@bike-application.60cxb.mongodb.net/?retryWrites=true&w=majority"
+DATABASE_CLIENT_URL_KEY = "mongodb+srv://bikeintern:bikeintern@bike-application.60cxb.mongodb.net/?retryWrites=true&w=majority"
 DATABASE_NAME_KEY = "Rental_Bike_Share_DB"
 DATABASE_COLLECTION_NAME_KEY = "Bike_Data"
 DATABASE_TRAINING_COLLECTION_NAME_KEY = "Training"

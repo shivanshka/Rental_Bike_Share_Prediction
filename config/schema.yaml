@@ -12,15 +12,14 @@ Columns :
   is_holiday : category
   working_day : category
   temperature(in celcius) : float
-  relative temperature(in celcius) : float
-  windspeed(in kmph) : float
-  humidity : float
+  relative_temperature(in celcius) : float
+  wind_speed(in kmph) : float
+  humidity(in %) : float
   description : varchar
   casual : int
   member : int
   
-target_column:  
-  total_count : int
+target_column: total_count
 
 date_columns:
   - date

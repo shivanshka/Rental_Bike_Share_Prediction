@@ -22,7 +22,7 @@ class Feature_Engineering(BaseEstimator, TransformerMixin):
         """
         This class applies necessary Feature Engneering for Rental Bike Share Data
         """
-        logging.info(f"{'*'*20} Feature Engneering Started {'*'*20}")
+        logging.info(f"\n{'*'*20} Feature Engneering Started {'*'*20}\n\n")
         
         
     def wind_clean(self,x):
@@ -132,12 +132,12 @@ class Feature_Engineering(BaseEstimator, TransformerMixin):
 
 
 class DataTransformation:
-    def __init__(self, data_transforation_config: DataTransformationConfig,
+    def __init__(self, data_transformation_config: DataTransformationConfig,
                     data_ingestion_artifact: DataIngestionArtifact,
                     data_validation_artifact: DataValidationArtifact):
         try:
-            logging.info(f"{'*'*20} Data Transformation log started {'*'*20}")
-            self.data_transforation_config = data_transforation_config
+            logging.info(f"\n{'*'*20} Data Transformation log started {'*'*20}\n\n")
+            self.data_transformation_config = data_transformation_config
             self.data_ingestion_artifact = data_ingestion_artifact
             self.data_validation_artifact = data_validation_artifact
 
@@ -167,7 +167,7 @@ class DataTransformation:
                                             ("scaler",StandardScaler())])
 
             cat_pipeline = Pipeline(steps = [("impute", SimpleImputer(strategy="most_frequent")),
-                                             ("scaler",StandardScaler(with_mean=False))])
+                                             ])
 
             preprocessing = ColumnTransformer([('cat_pipeline',cat_pipeline, categorical_columns),
                                                ('num_pipeline',num_pipeline,numerical_columns)])
@@ -194,12 +194,7 @@ class DataTransformation:
             # Extracting target column name
             target_column_name = schema[TARGET_COLUMN_KEY]
 
-            logging.info(f"Splitting input and target feature from training and testing dataframe.")
-            input_feature_train_df = train_df.drop(columns = [target_column_name],axis = 1)
-            target_feature_train_df = train_df[target_column_name]
-
-            input_feature_test_df = test_df.drop(columns = [target_column_name],axis = 1)
-            target_feature_test_df = test_df[target_column_name]
+            
 
             logging.info(f"Obtaining feature engineering object.")
             fe_obj = self.get_feature_engineering_object()
@@ -209,16 +204,23 @@ class DataTransformation:
             categorical_columns = schema[CATEGORICAL_COLUMN_KEY]
 
             all_columns = date_columns+categorical_columns+numerical_columns
-            col = ['date','year','month','hour','season','weekday','is_holiday','working_day','casual','member',
+            col = ['date','year','month','hour','season','weekday','is_holiday','working_day','casual','member','total_count',
                     'temp','r_temp','wind','humidity','weather_sit','is_covid']
 
             logging.info(f"Applying feature engineering object on training dataframe and testing dataframe")
-            feature_eng_train_arr = fe_obj.fit_transform(input_feature_train_df)
-            feature_eng_test_arr = fe_obj.transform(input_feature_test_df)
+            feature_eng_train_arr = fe_obj.fit_transform(train_df)
+            feature_eng_test_arr = fe_obj.transform(test_df)
 
             # Converting featured engineered array into dataframe
             feature_eng_train_df = pd.DataFrame(feature_eng_train_arr,columns=col)
             feature_eng_test_df = pd.DataFrame(feature_eng_test_arr,columns=col)
+
+            logging.info(f"Splitting input and target feature from training and testing dataframe.")
+            input_feature_train_df = feature_eng_train_df.drop(columns = target_column_name,axis = 1)
+            target_feature_train_df = feature_eng_train_df[target_column_name]
+
+            input_feature_test_df = feature_eng_test_df.drop(columns = target_column_name,axis = 1)
+            target_feature_test_df = feature_eng_test_df[target_column_name]
 
             # Taking out date, year, month, hour columns from train and test data
             date_col_train_df = feature_eng_train_df.loc[:,date_columns]
@@ -228,14 +230,14 @@ class DataTransformation:
             preprocessing_obj = self.get_data_transformer_object()
 
             logging.info(f"Applying preprocessing object on training dataframe and testing dataframe")
-            train_arr = preprocessing_obj.fit_transform(feature_eng_train_df)
-            test_arr = preprocessing_obj.transform(feature_eng_test_df)
+            train_arr = preprocessing_obj.fit_transform(input_feature_train_df)
+            test_arr = preprocessing_obj.transform(input_feature_test_df)
 
             transformed_train_df = pd.DataFrame(np.c_[date_col_train_df,train_arr,np.array(target_feature_train_df)],columns=all_columns+[target_column_name])
             transformed_test_df = pd.DataFrame(np.c_[date_col_test_df,test_arr,np.array(target_feature_test_df)],columns=all_columns+[target_column_name])
 
-            transformed_train_dir = self.data_transforation_config.transformed_train_dir
-            transformed_test_dir = self.data_transforation_config.transformed_test_dir
+            transformed_train_dir = self.data_transformation_config.transformed_train_dir
+            transformed_test_dir = self.data_transformation_config.transformed_test_dir
 
             transformed_train_file_path = os.path.join(transformed_train_dir,"transformed_train.csv")
             transformed_test_file_path = os.path.join(transformed_test_dir,"transformed_test.csv")
@@ -244,12 +246,16 @@ class DataTransformation:
             save_data(file_path = transformed_test_file_path, data = transformed_test_df)
 
             logging.info("Saving Feature Engineering Object")
-            feature_engineering_object_file_path = self.data_transforation_config.feature_engineering_object_file_path
+            feature_engineering_object_file_path = self.data_transformation_config.feature_engineering_object_file_path
             save_object(file_path = feature_engineering_object_file_path,obj = fe_obj)
+            save_object(file_path=os.path.join(ROOT_DIR,PIKLE_FOLDER_NAME_KEY,
+                                 os.path.basename(feature_engineering_object_file_path)),obj=fe_obj)
 
             logging.info("Saving Preprocessing Object")
-            preprocessing_object_file_path = self.data_transforation_config.preprocessed_object_file_path
+            preprocessing_object_file_path = self.data_transformation_config.preprocessed_object_file_path
             save_object(file_path = preprocessing_object_file_path, obj = preprocessing_obj)
+            save_object(file_path=os.path.join(ROOT_DIR,PIKLE_FOLDER_NAME_KEY,
+                                 os.path.basename(preprocessing_object_file_path)),obj=preprocessing_obj)
 
             data_transformation_artifact = DataTransformationArtifact(is_transformed=True,
             message="Data transformation successfull.",
@@ -265,4 +271,4 @@ class DataTransformation:
             raise ApplicationException(e,sys) from e
 
     def __del__(self):
-        logging.info(f"{'*'*20} Data Transformation log completed {'*'*20}")
+        logging.info(f"\n{'*'*20} Data Transformation log completed {'*'*20}\n\n")

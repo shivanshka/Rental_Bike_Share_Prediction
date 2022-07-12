@@ -1,4 +1,5 @@
 
+from Prediction_Application.components.model_trainer import ModelTrainer
 from Prediction_Application.logger import logging
 from Prediction_Application.exception import ApplicationException
 from Prediction_Application.components.data_ingestion import DataIngestion
@@ -6,7 +7,7 @@ from Prediction_Application.components.data_validation import DataValidation
 from Prediction_Application.components.data_transformation import DataTransformation
 from Prediction_Application.config.configuration import Configuration
 from Prediction_Application.entity.config_entity import DataIngestionConfig
-from Prediction_Application.entity.artifact_entity import DataIngestionArtifact,DataTransformationArtifact,DataValidationArtifact
+from Prediction_Application.entity.artifact_entity import DataIngestionArtifact,DataTransformationArtifact,DataValidationArtifact, ModelTrainerArtifact
 import os,sys
 
 
@@ -16,7 +17,7 @@ class Training_Pipeline:
 
     def __init__(self,config: Configuration=Configuration())->None:
         try:
-            logging.info(f"{'*'*20} Initiating the Training Pipeline {'*'*20}")
+            logging.info(f"\n{'*'*20} Initiating the Training Pipeline {'*'*20}\n\n")
             self.config = config
         except Exception as e:
             raise ApplicationException(e,sys) from e
@@ -48,7 +49,16 @@ class Training_Pipeline:
 
             return data_transformation.initiate_data_transformation()
         except Exception as e:
-            raise ApplicationException(e,sys) from e                    
+            raise ApplicationException(e,sys) from e
+
+    def start_model_training(self,data_transformation_artifact: DataTransformationArtifact) -> ModelTrainerArtifact:
+        try:
+            model_trainer = ModelTrainer(model_trainer_config=self.config.get_model_trainer_config(),
+                                        data_transformation_artifact=data_transformation_artifact)   
+
+            return model_trainer.initiate_model_training()
+        except Exception as e:
+            raise ApplicationException(e,sys) from e               
 
     def run_training_pipeline(self):
         try:
@@ -61,8 +71,10 @@ class Training_Pipeline:
 
             data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact=data_ingestion_artifact,
                                                              data_validation_artifact=data_validation_artifact)
+
+            model_trainer_artifact = self.start_model_training(data_transformation_artifact=data_transformation_artifact)         
         except Exception as e:
             raise ApplicationException(e,sys) from e
 
     def __del__(self):
-        logging.info(f"{'*'*20} Training Pipeline Complete {'*'*20}")
+        logging.info(f"\n{'*'*20} Training Pipeline Complete {'*'*20}\n\n")

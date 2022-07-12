@@ -89,22 +89,23 @@ class DataValidation:
         try:
             data = pd.read_csv(file)
             # Finding no of columns in the dataset
-            no_of_columns = data.shape[1]
+            no_of_columns = data.shape[1]-1
             # Checking if the no of columns in dataset is as per defined schema
             if no_of_columns != self.dataset_schema["NumberofColumns"]:
                 raise Exception(f"No of columns is not correct in file: [{file}]!!!")
 
-            columns = data.columns
+            columns = list(data.columns)
+            columns.remove('total_count')
 
             # Checking for columns name , whether they are as per the defined schema
-            for column in columns.remove['total_count']:
+            for column in columns:
                 if column not in self.dataset_schema["Columns"].keys():
                     raise Exception(f"Column :[{column}] in file: [{file}] not available in the Schema!!!")
 
             # Checking whether any column have entire rows as missing value
             count = 0
             col = []
-            for column in columns.remove['total_count']:            
+            for column in columns:            
                 if (len(data[column]) - data[column].count()) == len(data[column]):
                     count+=1
                     col.append(column)
@@ -138,6 +139,7 @@ class DataValidation:
 
     def get_and_save_data_drift_report(self):
         try:
+            logging.info("Generating data drift report.json file")
             profile = Profile(sections = [DataDriftProfileSection()])
             train_df, test_df = self.get_train_test_df()
             profile.calculate(train_df, test_df)
@@ -149,12 +151,14 @@ class DataValidation:
 
             with open(report_file_path,"w") as report_file:
                 json.dump(report, report_file, indent = 6)
+            logging.info("Report.json file generation successful!!")
             return report
         except Exception as e:
             raise ApplicationException(e,sys) from e   
 
     def save_data_drift_report_page(self):
         try:
+            logging.info("Generating data drift report.html page")
             dashboard = Dashboard(tabs = [DataDriftTab()])
             train_df, test_df = self.get_train_test_df()
             dashboard.calculate(train_df, test_df)
@@ -164,11 +168,13 @@ class DataValidation:
             os.makedirs(report_page_dir,exist_ok=True)
 
             dashboard.save(report_page_file_path)
+            logging.info("Report.html page generation successful!!")
         except Exception as e:
             raise ApplicationException(e,sys) from e
 
     def is_data_drift_found(self) -> bool:
         try:
+            logging.info("Checking for Data Drift")
             report = self.get_and_save_data_drift_report()
             self.save_data_drift_report_page()
             return True
