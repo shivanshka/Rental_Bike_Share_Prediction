@@ -27,7 +27,7 @@ class ModelTrainer:
             raise ApplicationException(e,sys) from e
 
     
-    def get_random_forest_best_params(self, x_train,y_train):
+    def get_random_forest_best_params(self, x_train,y_train)->dict:
         try:
             logging.info("Grid Search for Random forest best parameters started")
             rf = RandomForestRegressor(n_estimators=100, criterion='squared_error',random_state=786)
@@ -41,7 +41,7 @@ class ModelTrainer:
         except Exception as e:
             raise ApplicationException(e,sys) from e
 
-    def get_xgboost_best_params(self,x_train,y_train,x_test,y_test):
+    def get_xgboost_best_params(self,x_train,y_train,x_test,y_test)->dict:
         try:
             logging.info("Optuna Search for XG Boost best parameters started")
             def objective(trial,data = x_train, target = y_train):
@@ -73,10 +73,12 @@ class ModelTrainer:
 
             find_param = optuna.create_study(direction='minimize')
             find_param.optimize(objective, n_trials = 10)
-            best_params = find_param.best_trial.params
+            find_param.best_trial.params
             logging.info("Optuna Search for XG Boost best parameters completed")
-            return best_params
+            return find_param.best_trial.params
 
+        except ValueError:
+            self.get_xgboost_best_params(x_train,y_train,x_test,y_test)
         except Exception as e:
             raise ApplicationException(e,sys) from e
 
@@ -110,11 +112,11 @@ class ModelTrainer:
 
     def get_best_model(self,x_train,y_train,x_test,y_test):
         try:
-            logging.info(f"{'*'*20} Training Random Forest Model {'*'*20}")
-            rf_obj = self.Random_Forest_Regressor(x_train,y_train)
-
             logging.info(f"{'*'*20} Training XGBoost Model {'*'*20}")
             xgb_obj = self.XGBoost_Regressor(x_train,y_train,x_test,y_test)
+
+            logging.info(f"{'*'*20} Training Random Forest Model {'*'*20}")
+            rf_obj = self.Random_Forest_Regressor(x_train,y_train)
 
             logging.info("Objects for model obtained!!! Now calcalating R2 score for model evaluation")
             rf_r2 = r2_score(y_test, rf_obj.predict(x_test))

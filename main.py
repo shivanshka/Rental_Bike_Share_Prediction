@@ -2,9 +2,10 @@ from wsgiref import simple_server
 from flask import Flask, render_template,request, Response
 from flask_cors import CORS, cross_origin
 from Prediction_Application.pipeline.prediction_pipeline import Prediction
-from Prediction_Application.pipeline.training_pipeline import Model_Training
+from Prediction_Application.pipeline.training_pipeline import Training_Pipeline
+
 from Prediction_Application.logger import logging
-import os
+import os,sys
 
 app = Flask(__name__)
 CORS(app)
@@ -86,13 +87,8 @@ def single_predict():
 @cross_origin()
 def trainRouteClient():
     try:
-        # if request.json['folderPath'] is not None:
-        folder_path = "Training_Batch_Files"
-        # path = request.json['folderPath']
-        if folder_path is not None:
-            path = folder_path
-            train_Obj = Model_Training(path)  # object initialization
-            train_Obj.initiate_model_training()  # training the model for the files in the table
+        train_obj = Training_Pipeline()
+        train_obj.run_training_pipeline() # training the model for the files in the table
             
     except ValueError:
         return Response("Error Occurred! %s" % ValueError)
