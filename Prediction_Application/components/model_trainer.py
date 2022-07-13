@@ -41,10 +41,13 @@ class ModelTrainer:
         except Exception as e:
             raise ApplicationException(e,sys) from e
 
+    
+    
+    
     def get_xgboost_best_params(self,x_train,y_train,x_test,y_test)->dict:
         try:
             logging.info("Optuna Search for XG Boost best parameters started")
-            def objective(trial,data = x_train, target = y_train):
+            def objective(trial, data=x_train, target=y_train):
                 param = {
                 #'tree_method' : 'gpu_hist',
                 'lambda' : trial.suggest_loguniform('lambda', 1e-4, 10.0),
@@ -65,20 +68,21 @@ class ModelTrainer:
                     param['gamma'] : trial.suggest_float('gamma', 1e-3, 4)
                     param['eta'] : trial.suggest_float('eta', .001, 5)
 
-                xgb_reg_model = XGBRegressor(**param)
-                xgb_reg_model.fit(x_train,y_train, eval_set = [(x_test,y_test)], verbose = True)
+                xgb_reg_model = XGBRegressor(objective="reg:squarederror",**param)
+                xgb_reg_model.fit(data,target, eval_set = [(x_test,y_test)], verbose = True)
                 pred_xgb = xgb_reg_model.predict(x_test)
-                rmse = mean_squared_error(y_test, pred_xgb)
-                return rmse
-
+                mse = mean_squared_error(y_test, pred_xgb)
+                return mse
+            
             find_param = optuna.create_study(direction='minimize')
             find_param.optimize(objective, n_trials = 10)
             find_param.best_trial.params
             logging.info("Optuna Search for XG Boost best parameters completed")
-            return find_param.best_trial.params
+            params = find_param.best_trial.params
+            return params
 
         except ValueError:
-            self.get_xgboost_best_params(x_train,y_train,x_test,y_test)
+            return self.get_xgboost_best_params(x_train,y_train,x_test,y_test)
         except Exception as e:
             raise ApplicationException(e,sys) from e
 
