@@ -104,7 +104,7 @@ def single_predict():
         return Response("Error Occurred! %s" % e)
 
 
-@app.route("/train", methods=['GET', 'POST'])
+@app.route("/start_train", methods=['GET', 'POST'])
 @cross_origin()
 def trainRouteClient():
     try:
