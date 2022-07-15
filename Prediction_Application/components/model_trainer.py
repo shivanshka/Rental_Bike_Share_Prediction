@@ -154,6 +154,9 @@ class ModelTrainer:
             train_df = pd.read_csv(transformed_train_file_path)
             test_df = pd.read_csv(transformed_test_file_path)
 
+            train_df = train_df.infer_objects()
+            test_df = test_df.infer_objects()
+
             logging.info("Splitting Input features and Target Feature for train and test data")
             train_input_feature = train_df.drop(columns=["year","total_count"], axis=1)
             train_target_feature = train_df.iloc[:,-1]
