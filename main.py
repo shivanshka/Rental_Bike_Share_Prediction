@@ -119,8 +119,9 @@ def trainRouteClient():
         return Response("Error Occurred! %s" % e)
     return Response("Training successful!!")
 
-port = int(os.getenv("PORT", 8000))
+
 if __name__=="__main__":
+    port = int(os.getenv("PORT",8000))
     host = 'localhost'
     httpd = simple_server.make_server(host, port, app)
     print("Serving on %s:%d" % (host, port))
