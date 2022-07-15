@@ -118,16 +118,22 @@ class ModelTrainer:
         try:
             logging.info(f"{'*'*20} Training XGBoost Model {'*'*20}")
             xgb_obj = self.XGBoost_Regressor(x_train,y_train,x_test,y_test)
+            logging.info(f"{'*'*20} Trained XGBoost Model Successfully!! {'*'*20}")
 
             logging.info(f"{'*'*20} Training Random Forest Model {'*'*20}")
             rf_obj = self.Random_Forest_Regressor(x_train,y_train)
+            logging.info(f"{'*'*20} Trained Random Forest Model Successfully!! {'*'*20}")
 
-            logging.info("Objects for model obtained!!! Now calcalating R2 score for model evaluation")
-            rf_r2 = r2_score(y_test, rf_obj.predict(x_test))
-            xgb_r2 = r2_score(y_test, xgb_obj.predict(x_test))
-            logging.info(f"R2 score Random Forest : {rf_r2} || R2 score for XGBoost : {xgb_r2}")
+            logging.info("***Objects for model obtained!!! Now calcalating R2 score for model evaluation***")
+            rf_r2_train = r2_score(y_train,rf_obj.predict(x_train))
+            xgb_r2_train = r2_score(y_train,xgb_obj.predict(x_train))
+            logging.info(f"R2 score for Training set ---> Random Forest: {rf_r2_train} || XG Boost: {xgb_r2_train}")
+            
+            rf_r2_test = r2_score(y_test, rf_obj.predict(x_test))
+            xgb_r2_test = r2_score(y_test, xgb_obj.predict(x_test))
+            logging.info(f"R2 score for Testing set ---> Random Forest : {rf_r2_test} || XGBoost : {xgb_r2_test}")
 
-            if xgb_r2 > rf_r2:
+            if xgb_r2_test > rf_r2_test:
                 logging.info("XGBoost Model Accepted!!!")
                 return xgb_obj
             else:
@@ -149,12 +155,12 @@ class ModelTrainer:
             test_df = pd.read_csv(transformed_test_file_path)
 
             logging.info("Splitting Input features and Target Feature for train and test data")
-            train_input_feature = train_df.drop(columns=["year","casual","member","total_count"], axis=1)
+            train_input_feature = train_df.drop(columns=["year","total_count"], axis=1)
             train_target_feature = train_df.iloc[:,-1]
 
             train_input_feature.set_index("date", inplace=True)
 
-            test_input_feature = test_df.drop(columns=["year","casual","member","total_count"], axis=1)
+            test_input_feature = test_df.drop(columns=["year","total_count"], axis=1)
             test_target_feature = test_df.iloc[:,-1]
 
             test_input_feature.set_index("date", inplace=True)

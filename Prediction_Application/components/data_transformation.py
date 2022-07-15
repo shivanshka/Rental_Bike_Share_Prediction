@@ -120,7 +120,7 @@ class Feature_Engineering(BaseEstimator, TransformerMixin):
             weather_sit = X["description"].apply(self.create_weather_situation)
             is_covid = X["year"].apply(self.create_covid_period)
             # Dropping the 'description' column
-            X.drop(columns = "description",inplace = True)
+            X.drop(columns = ["casual","member","r_temp","description"],inplace = True)
 
             # Merging the above two new column to the passed Dataset
             generated_feature = np.c_[X,weather_sit,is_covid]
@@ -204,8 +204,8 @@ class DataTransformation:
             categorical_columns = schema[CATEGORICAL_COLUMN_KEY]
 
             all_columns = date_columns+categorical_columns+numerical_columns
-            col = ['date','year','month','hour','season','weekday','is_holiday','working_day','casual','member','total_count',
-                    'temp','r_temp','wind','humidity','weather_sit','is_covid']
+            col = ['date','year','month','hour','season','weekday','is_holiday','working_day','total_count',
+                    'temp','wind','humidity','weather_sit','is_covid']
 
             logging.info(f"Applying feature engineering object on training dataframe and testing dataframe")
             feature_eng_train_arr = fe_obj.fit_transform(train_df)

@@ -4,7 +4,7 @@ from flask_cors import CORS, cross_origin
 from Prediction_Application.pipeline.prediction_pipeline import Prediction
 from Prediction_Application.pipeline.training_pipeline import Training_Pipeline
 
-from Prediction_Application.logger import logging
+#from Prediction_Application.logger import logging
 import os,sys
 
 app = Flask(__name__)
@@ -60,18 +60,39 @@ def bulk_predict():
 def single_predict():
     try:
         if request.json is not None:
-            data = request.json['filepath']
+            data = {'month': request.json['month'],
+            'hour': request.form('hour'),
+            'season': request.form('season'),
+            'weekday': request.form('weekday'),
+            'is_holiday': request.form('is_holiday'),
+            'working_day': request.form('working_day'),
+            'weather_sit': request.form('weather_sit'),
+            'is_covid': request.form('is_covid'),
+            'temp': request.form('temp'),
+            'r_temp': request.form('r_temp'),
+            'wind': request.form('wind'),
+            'humidity': request.form('humidity')}
 
             pred = Prediction()  # object initialization
             pred_val = pred.initiate_single_prediction(data)  # calling the prediction_validation function
             return Response("Prediction File created at !!!" + str(pred_val))
 
         elif request.form is not None:
-            data = request.form['filepath']
+            data = {'month': int(request.form('month')),
+            'hour': int(request.form('hour')),
+            'season': request.form('season'),
+            'weekday': request.form('weekday'),
+            'is_holiday': request.form('is_holiday'),
+            'working_day': request.form('working_day'),
+            'weather_sit': request.form('weather_sit'),
+            'is_covid': request.form('is_covid'),
+            'temp': float(request.form('temp')),
+            'wind': float(request.form('wind')),
+            'humidity': float(request.form('humidity'))}
 
             pred = Prediction()  # object initialization
             pred_val = pred.initiate_single_prediction(data)  # calling the prediction_validation function
-            return Response("Prediction File created at !!!" + str(pred_val))
+            return Response("Demand for Bikes with given conditions: " + str(pred_val))
             
         else:
             print('Nothing Matched')
@@ -98,7 +119,7 @@ def trainRouteClient():
         return Response("Error Occurred! %s" % e)
     return Response("Training successful!!")
 
-port = int(os.getenv("PORT", 6000))
+port = int(os.getenv("PORT", 8000))
 if __name__=="__main__":
     host = 'localhost'
     httpd = simple_server.make_server(host, port, app)

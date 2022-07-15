@@ -28,10 +28,7 @@ date_columns:
   - hour
 
 numerical_columns:
-  - casual
-  - member
   - temp
-  - r_temp
   - wind
   - humidity
   

@@ -26,35 +26,49 @@ class Prediction:
             data_validation_status = True
             if data_validation_status:
                 data_df = pd.read_csv(self.path)
-                col = ['date','year','month','hour','season','weekday','is_holiday','working_day','casual','member','total_count',
-                    'temp','r_temp','wind','humidity','weather_sit','is_covid']
+                data_df['total_count'] = 0
+                col = ['date','year','month','hour','season','weekday','is_holiday','working_day','total_count',
+                    'temp','wind','humidity','weather_sit','is_covid']
                 
                 featured_eng_data = pd.DataFrame(self.fe_obj.transform(data_df),columns=col)
+                featured_eng_data.drop(columns="total_count", inplace=True)
                 
                 date_cols = featured_eng_data.loc[:,['date','year','month','hour']]
 
-                cols = ['date','year','month','hour','season','weekday','is_holiday','working_day','weather_sit','is_covid',
-                'casual','member','total_count','temp','r_temp','wind','humidity']
-                
+                cols = ['date','year','month','hour','season','weekday','is_holiday','working_day','weather_sit',
+                'is_covid','temp','wind','humidity']
+                data_df = data_df[~data_df.duplicated(subset=["date","month","hour"],keep='last')]
+
                 transformed_data = pd.DataFrame(np.c_[date_cols,self.preprocessing_obj.transform(featured_eng_data)],columns=cols)
                 
-                transformed_data.drop(columns=["year","casual","member"], inplace=True)
+                transformed_data.drop(columns=["year"], inplace=True)
                 transformed_data.set_index("date",inplace=True)
+                transformed_data=transformed_data.infer_objects()
 
                 prediction = self.model_obj.predict(transformed_data)
-                data_df["predicted_demand"] = prediction
+                data_df["predicted_demand"] = round(prediction)
 
-                output_folder_file_path = os.path.join(ROOT_DIR,"Output Folder","Predicted.csv")
+                output_folder_file_path = os.path.join(ROOT_DIR,"Output Folder",CURRENT_TIME_STAMP,"Predicted.csv")
                 save_data(file_path=output_folder_file_path,data = data_df)
                 return output_folder_file_path
 
         except Exception as e:
             raise ApplicationException(e,sys) from e 
 
-    def initiate_single_prediction(self,data:dict):
+    def initiate_single_prediction(self,data:dict)->int:
         try:
-            df = pd.DataFrame(data)
-            prediction = self.model_obj.predict(self.preprocessing_obj.transform(df))
-            return prediction
+            df = pd.DataFrame([data])
+            date_cols = df.loc[:,["date","month","hour"]]
+            preprocessed_df = pd.DataFrame(np.c_[date_cols,self.preprocessing_obj.transform(df.drop(columns=["date","month","hour"]))],
+            columns=df.columns)
+            preprocessed_df.set_index("date",inplace=True)
+            preprocessed_df = preprocessed_df.infer_objects()
+            prediction = self.model_obj.predict(preprocessed_df)
+            return round(prediction)
         except Exception as e:
             raise ApplicationException(e,sys) from e
+
+if __name__=="__main__":
+    path = r"G:\Shivansh\iNeuron\Internship\Rental Bike Share Prediction\New folder\Testing_data.csv"
+    pred = Prediction(path)
+    print(pred.initiate_bulk_prediction())

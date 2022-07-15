@@ -70,28 +70,56 @@
         <div class="u-align-left u-form u-form-1">
           <form action="#" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="Prediction Path" style="padding: 10px;">
             <div class="u-form-group">
-              <label for="email-c777" class="u-label u-label-1">Path for data</label>
-              <input type="text" placeholder="Enter a valid path for data" id="email-c777" name="csv" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white" required="required" autofocus="autofocus">
+              <label for="email-c777" class="u-label u-label-1">Month</label>
+              <input type="text" placeholder="Enter month number (1 to 12)" id="email-c777" name="month" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white" required="required" autofocus="autofocus">
             </div>
             <div class="u-form-group u-form-group-2">
-              <label for="text-aa9c" class="u-label u-label-2">Input</label>
-              <input type="text" placeholder="" id="text-aa9c" name="text" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
+              <label for="text-aa9c" class="u-label u-label-2">Hour</label>
+              <input type="text" placeholder="Enter hour (0 -23)" id="text-aa9c" name="hour" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
             </div>
             <div class="u-form-group u-form-group-3">
-              <label for="text-c0db" class="u-label u-label-3">Input</label>
-              <input type="text" placeholder="" id="text-c0db" name="text-1" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
+              <label for="select-996e" class="u-label u-label-4">Season</label>
+              <div class="u-form-select-wrapper">
+                <select id="select-996e" name="season" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
+                  <option value="Item 1">Summer</option>
+                  <option value="Item 2">Winter</option>
+                  <option value="Item 3">Fall</option>
+                  <option value="Item 4">Spring</option>
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" version="1" class="u-caret"><path fill="currentColor" d="M4 8L0 4h8z"></path></svg>
+              </div>
             </div>
             <div class="u-form-group u-form-group-4">
-              <label for="text-57db" class="u-label u-label-4">Input</label>
-              <input type="text" placeholder="" id="text-57db" name="text-2" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
+              <label for="select-996e" class="u-label u-label-4">Weekday</label>
+              <div class="u-form-select-wrapper">
+                <select id="select-996e" name="weekday" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
+                  <option value="Item 1">Monday</option>
+                  <option value="Item 2">Tuesday</option>
+                  <option value="Item 3">Wednesday</option>
+                  <option value="Item 4">Thursday</option>
+                  <option value="Item 5">Friday</option>
+                  <option value="Item 6">Saturday</option>
+                  <option value="Item 7">Sunday</option>
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" version="1" class="u-caret"><path fill="currentColor" d="M4 8L0 4h8z"></path></svg>
+              </div>
             </div>
             <div class="u-form-group u-form-select u-form-group-5">
-              <label for="select-996e" class="u-label u-label-5">Select</label>
+              <label for="select-996e" class="u-label u-label-5">Holiday</label>
               <div class="u-form-select-wrapper">
-                <select id="select-996e" name="select" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
-                  <option value="Item 1">Item 1</option>
-                  <option value="Item 2">Item 2</option>
-                  <option value="Item 3">Item 3</option>
+                <select id="select-996e" name="is_holiday" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
+                  <option value="Item 1">Yes</option>
+                  <option value="Item 2">No</option>
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" version="1" class="u-caret"><path fill="currentColor" d="M4 8L0 4h8z"></path></svg>
+              </div>
+            </div>
+            <div class="u-form-group u-form-select u-form-group-5">
+              <label for="select-996e" class="u-label u-label-5">Working Day</label>
+              <div class="u-form-select-wrapper">
+                <select id="select-996e" name="is_working" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
+                  <option value="Item 1">Yes</option>
+                  <option value="Item 2">No</option>
                 </select>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" version="1" class="u-caret"><path fill="currentColor" d="M4 8L0 4h8z"></path></svg>
               </div>
@@ -105,31 +133,38 @@
         <div class="u-align-left u-form u-form-2">
           <form action="#" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="Prediction Path" style="padding: 10px;">
             <div class="u-form-group">
-              <label for="email-c777" class="u-label u-label-6">Path for data</label>
-              <input type="text" placeholder="Enter a valid path for data" id="email-c777" name="csv" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white" required="required" autofocus="autofocus">
-            </div>
-            <div class="u-form-group u-form-group-8">
-              <label for="text-aa9c" class="u-label u-label-7">Input</label>
-              <input type="text" placeholder="" id="text-aa9c" name="text" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
-            </div>
-            <div class="u-form-group u-form-group-9">
-              <label for="text-c0db" class="u-label u-label-8">Input</label>
-              <input type="text" placeholder="" id="text-c0db" name="text-1" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
-            </div>
-            <div class="u-form-group u-form-group-10">
-              <label for="text-57db" class="u-label u-label-9">Input</label>
-              <input type="text" placeholder="" id="text-57db" name="text-2" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
-            </div>
-            <div class="u-form-group u-form-select u-form-group-11">
-              <label for="select-996e" class="u-label u-label-10">Select</label>
+              <label for="select-996e" class="u-label u-label-6">Weather Situation</label>
               <div class="u-form-select-wrapper">
-                <select id="select-996e" name="select" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
-                  <option value="Item 1">Item 1</option>
-                  <option value="Item 2">Item 2</option>
-                  <option value="Item 3">Item 3</option>
+                <select id="select-996e" name="weather_sit" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
+                  <option value="Item 1">Summer</option>
+                  <option value="Item 2">Winter</option>
+                  <option value="Item 3">Fall</option>
+                  <option value="Item 4">Spring</option>
                 </select>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" version="1" class="u-caret"><path fill="currentColor" d="M4 8L0 4h8z"></path></svg>
               </div>
+            </div>
+            <div class="u-form-group u-form-group-8">
+              <label for="select-996e" class="u-label u-label-7">Covid Year</label>
+              <div class="u-form-select-wrapper">
+                <select id="select-996e" name="is_covid" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
+                  <option value="Item 1">Yes</option>
+                  <option value="Item 2">No</option>
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" version="1" class="u-caret"><path fill="currentColor" d="M4 8L0 4h8z"></path></svg>
+              </div>
+            </div>
+            <div class="u-form-group u-form-group-9">
+              <label for="text-c0db" class="u-label u-label-8">Temperature</label>
+              <input type="text" placeholder="Enter temperature (in celcius)" id="text-c0db" name="temp" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
+            </div>
+            <div class="u-form-group u-form-group-10">
+              <label for="text-57db" class="u-label u-label-9">Wind Speed</label>
+              <input type="text" placeholder="Enter windspeed in kmph" id="text-57db" name="wind" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
+            </div>
+            <div class="u-form-group u-form-select u-form-group-11">
+              <label for="text-57db" class="u-label u-label-9">Humidity</label>
+              <input type="text" placeholder="Enter humidity in %" id="text-57db" name="humidity" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white">
             </div>
             <div class="u-align-center u-form-group u-form-submit">
               <a href="#" class="u-btn u-btn-round u-btn-submit u-button-style u-palette-3-base u-radius-28 u-btn-2">Predict<br>
