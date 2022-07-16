@@ -56,6 +56,13 @@
   margin: 60px auto 0;
 }
 
+.u-section-1 .result {
+  font-weight: 700;
+  margin: 60px auto 0;
+  overflow-wrap: normal;
+  color: red
+}
+
 @media (max-width: 1199px) {
   .u-section-1 .u-form-1 {
     margin-right: 355px;
@@ -92,6 +99,7 @@
   .u-section-1 .u-container-layout-2 {
     padding-left: 10px;
     padding-right: 10px;
+    overflow-wrap: normal;
   }
 }
 
@@ -107,5 +115,6 @@
   .u-section-1 .u-group-2 {
     width: 340px;
     margin-right: 0;
+    overflow-wrap: normal
   }
 }

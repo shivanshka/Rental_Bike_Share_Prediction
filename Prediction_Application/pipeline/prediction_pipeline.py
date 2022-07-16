@@ -46,7 +46,7 @@ class Prediction:
                 transformed_data=transformed_data.infer_objects()
 
                 prediction = self.model_obj.predict(transformed_data)
-                data_df["predicted_demand"] = round(prediction)
+                data_df["predicted_demand"] = prediction
 
                 output_folder_file_path = os.path.join(ROOT_DIR,"Output Folder",CURRENT_TIME_STAMP,"Predicted.csv")
                 save_data(file_path=output_folder_file_path,data = data_df)
@@ -64,7 +64,7 @@ class Prediction:
             preprocessed_df.set_index("date",inplace=True)
             preprocessed_df = preprocessed_df.infer_objects()
             prediction = self.model_obj.predict(preprocessed_df)
-            return round(prediction)
+            return round(prediction[0])
         except Exception as e:
             raise ApplicationException(e,sys) from e
 

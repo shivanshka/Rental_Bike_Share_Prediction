@@ -68,29 +68,28 @@
         </div>
         <h3 class="u-text u-text-default u-text-2">Bulk Prediction</h3>
         <div class="u-form u-form-1">
-          <form action="#" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="Prediction Path" style="padding: 10px;">
+          <form action="/bulk_page" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="Prediction Path" style="padding: 10px;">
             <div class="u-form-group">
               <label for="email-c777" class="u-label u-label-1">Path for data</label>
-              <input type="text" placeholder="Enter a valid path for data" id="email-c777" name="csv" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white" required="required">
+              <input type="text" placeholder="Enter a valid path for data" id="filepath" name="filepath" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white" required="required">
             </div>
             <div class="u-align-center u-form-group u-form-submit">
-              <a href="#" class="u-btn u-btn-round u-btn-submit u-button-style u-palette-3-base u-radius-28 u-btn-1">Predict<br>
+              <a href="{{ url_for('bulk_page') }}" id="predict" class="u-btn u-btn-round u-btn-submit u-button-style u-palette-3-base u-radius-28 u-btn-1">Predict<br>
               </a>
               <input type="submit" value="submit" class="u-form-control-hidden">
             </div>
-            <div class="u-form-send-message u-form-send-success"></div>
-            <div class="u-form-send-error u-form-send-message"></div>
-            <input type="hidden" value="" name="recaptchaResponse">
           </form>
         </div>
         <div class="u-container-style u-group u-palette-1-light-2 u-radius-10 u-shape-round u-group-2">
           <div class="u-container-layout u-container-layout-2">
-            <h4 class="u-align-center u-text u-text-default u-text-3">Path of predicted file</h4>
+            <h4 class="u-align-center u-text u-text-default u-text-3">Prediction File Path:</h4>
+            <div class="result">	
+						</div>
           </div>
         </div>
       </div>
+      
     </section>
-    
     
     <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-a78b"><div class="u-align-left u-clearfix u-sheet u-sheet-1">
         <a href="https://github.com/shivanshka/Rental_Bike_Share_Prediction.git" class="u-image u-logo u-image-1" data-image-width="512" data-image-height="512" title="Source code" target="_blank">
@@ -99,5 +98,32 @@
         <img class="u-image u-image-round u-preserve-proportions u-radius-10 u-image-2" src="{{ url_for('static', filename='img/linkied.png') }}" alt="" data-image-width="225" data-image-height="225" data-href="https://www.linkedin.com/in/shivansh-ka" data-target="_blank">
         <p class="u-text u-text-default u-text-1">Created by Shivansh Kaushal and Chirag Sharma</p>
       </div></footer>
+
+      <div id="loading"><div class="loader"></div></div>
+      <!-- Bootstrap core JavaScript -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+      <script>
+        $(document).ready(function(){
+          $('#loading').hide();
+          $("#predict").click(function(e){
+            e.preventDefault();
+            $('#loading').show();
+            var path = $("#filepath").val();
+            $.ajax({
+              //change url below
+              url : "/bulk_page",
+              type: "POST",
+              data: {filepath:path},
+              success: function(response){
+                $(".result").html('<p>' + response + '</p>');
+                $('#loading').hide();
+              }
+            });
+            
+          });
+        });
+      </script>
   </body>
 </html>
