@@ -8,5 +8,7 @@ PyYAML
 dill
 pymongo[srv]
 dnspython
+xgboost
+optuna
 evidently
 -e .
