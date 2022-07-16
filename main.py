@@ -1,5 +1,5 @@
-import re
-from wsgiref import simple_server
+
+#from wsgiref import simple_server
 from flask import Flask, render_template,request, Response
 from flask_cors import CORS, cross_origin
 from Prediction_Application.pipeline.prediction_pipeline import Prediction
@@ -9,7 +9,7 @@ from Prediction_Application.pipeline.training_pipeline import Training_Pipeline
 import os,sys
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
 
 @app.route("/", methods =["GET"])
 @cross_origin()
@@ -140,7 +140,7 @@ def trainRouteClient():
 
 #port = int(os.getenv("PORT",5004))
 if __name__=="__main__":
-    app.run(debug = True)
+    app.run()
     #host = '0.0.0.0'
     #httpd = simple_server.make_server(host, port, app)
     #print("Serving on %s:%d" % (host, port))
