@@ -11,18 +11,18 @@ import numpy as np
 
 class Prediction:
 
-    def __init__(self, path=None):
+    def __init__(self):
         logging.info(f"\n{'*'*20} Prediction Pipeline Initiated {'*'*20}\n")
-        self.folder = "Prediction_Batch_Files"
-        self.path=path = os.path.join(self.folder,os.listdir(self.folder)[0])
+        
         self.fe_obj = load_object(file_path=os.path.join(ROOT_DIR,PIKLE_FOLDER_NAME_KEY,"feat_eng.pkl"))
         self.preprocessing_obj = load_object(file_path=os.path.join(ROOT_DIR,PIKLE_FOLDER_NAME_KEY,"preprocessed.pkl"))
         self.model_obj = load_object(file_path=os.path.join(ROOT_DIR,PIKLE_FOLDER_NAME_KEY,"model.pkl"))
-        if path is not None:
-            logging.info(f"Predicting for filepath : [{self.path}]")
 
     def initiate_bulk_prediction(self):
         try:
+            self.folder = "Prediction_Batch_Files"
+            self.path=path = os.path.join(self.folder,os.listdir(self.folder)[0])
+            logging.info(f"Predicting for filepath : [{self.path}]")
             # Data Validation
             data_validation_status = True
             if data_validation_status:

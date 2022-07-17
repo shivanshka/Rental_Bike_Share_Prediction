@@ -67,10 +67,12 @@
             color: #d1d1d4;
         }
         .github_image{
+            border-radius: 5px;
             width: 30px;
             height: 30px;
         }
         .linkedin_image{
+            border-radius: 5px;
             width: 30px;
             height: 30px;
         }
@@ -100,6 +102,7 @@
         </div>
     </header>
     <div class="title">Rental Bike Share Demand Prediction</div>
+
     
     <div class="sales-input">
         <!-- main row -->
@@ -117,8 +120,8 @@
                         </div>
                     </center>
                 </form>
-                
             </div>
+
             <!-- user input column -->
             <div class="col">
                 <!-- Alert Message -->
@@ -134,62 +137,95 @@
                 {% endfor %}
                 {% endif %}
                 {% endwith %}
-                <form action="/predict" method="POST">
+                <form action="/single_predict" method="POST">
                     <!-- 1st row -->
                     <div class="row">
                         <div class="col">
-                            <label>Item Identifier</label>
-                            <input class="form-control" type="text" aria-label="default input example"
-                                name="Item_Identifier">
+                            <label>Date</label>
+                            <input class="form-control" placeholder="Enter date in yyyy-mm-dd format" type="text" aria-label="default input example"
+                                name="date">
                         </div>
                         <div class="col">
-                            <label>Item Weight</label>
-                            <input class="form-control" type="text" aria-label="default input example"
-                                name="Item_Weight">
+                            <label>Month</label>
+                            <select class="form-select" aria-label="Default select example" name="month">
+                                <option selected>Select Month</option>
+                                <option value="1">January</option>
+                                <option value="2">Febraury</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
                         </div>
                     </div>
 
                     <!-- 2nd row -->
                     <div class="row my-2">
                         <div class="col">
-                            <label>Item Fat Content</label>
-                            <select class="form-select" aria-label="Default select example" name="Item_Fat_Content">
-                                <option selected>Select Item Fat Content</option>
-                                <option value="Low Fat">Low Fat</option>
-                                <option value="Regular">Regular</option>
-                            </select>
+                            <label>Hour</label>
+                            <input class="form-control" placeholder="Enter hour between 0 to 23" type="text" aria-label="default input example"
+                                name="hour">
                         </div>
                         <div class="col">
-                            <label>Item Visibility</label>
-                            <input class="form-control" type="text" aria-label="default input example"
-                                name="Item_Visibility">
+                            <label>Season</label>
+                            <select class="form-select" aria-label="Default select example" name="season">
+                                <option selected>Select Season</option>
+                                <option value="1">Winter</option>
+                                <option value="2">Spring</option>
+                                <option value="3">Summer</option>
+                                <option value="4">Fall</option>
+                            </select>
                         </div>
                     </div>
 
                     <!-- 3rd row -->
                     <div class="row my-2">
                         <div class="col">
-                            <label>Item Type</label>
-                            <input class="form-control" type="text" aria-label="default input example" name="Item_Type">
+                            <label>Weekday</label>
+                            <select class="form-select" aria-label="Default select example" name="weekday">
+                                <option selected>Select Weekday</option>
+                                <option value="0">Monday</option>
+                                <option value="1">Tuesday</option>
+                                <option value="2">Wednesday</option>
+                                <option value="3">Thursday</option>
+                                <option value="4">Friday</option>
+                                <option value="5">Saturday</option>
+                                <option value="6">Sunday</option>
+                            </select>
                         </div>
                         <div class="col">
-                            <label>Item MRP</label>
-                            <input class="form-control" type="text" aria-label="default input example" name="Item_MRP">
+                            <label>Holiday</label>
+                            <select class="form-select" aria-label="Default select example" name="is_holiday">
+                                <option selected>Select</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
                         </div>
                     </div>
 
                     <!-- 4th row -->
                     <div class="row my-2">
                         <div class="col">
-                            <label>Outlet Identifier</label>
-                            <input class="form-control" type="text" aria-label="default input example"
-                                name="Outlet_Identifier">
+                            <label>Working Day</label>
+                            <select class="form-select" aria-label="Default select example" name="working">
+                                <option selected>Select</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
                         </div>
                         <div class="col">
-                            <label>Outlet Establishment Year
-                            </label>
-                            <input class="form-control" type="text" aria-label="default input example"
-                                name="Outlet_Establishment_Year">
+                            <label>Covid Year</label>
+                            <select class="form-select" aria-label="Default select example" name="is_covid">
+                                <option selected>Select</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
                         </div>
                     </div>
 
@@ -197,47 +233,34 @@
                     <!-- 5th row -->
                     <div class="row my-2">
                         <div class="col">
-                            <label>Outlet Size</label>
-                            <select class="form-select" aria-label="Default select example" name="Outlet_Size">
-                                <option selected>Select Outlet Size</option>
-                                <option value="Small">Small</option>
-                                <option value="Medium">Medium</option>
-                                <option value="High">High</option>
+                            <label>Weather Condition</label>
+                            <select class="form-select" aria-label="Default select example" name="weather_sit">
+                                <option selected>Select Condition</option>
+                                <option value="1">Clear, Few clouds, Partly cloudy, Partly cloudy</option>
+                                <option value="2"> Mist + Cloudy, Mist + Broken clouds, Mist + Few clouds, Mist</option>
+                                <option value="3">Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds</option>
+                                <option value="4">Heavy Rain + Ice Pallets + Thunderstorm + Mist, Snow + Fog</option>
                             </select>
                         </div>
                         <div class="col">
-                            <label>Outlet Location Type</label>
-                            <select class="form-select" aria-label="Default select example" name="Outlet_Location_Type">
-                                <option selected>Select Outlet Location Type</option>
-                                <option value="Tier 1">Tier 1</option>
-                                <option value="Tier 2">Tier 2</option>
-                                <option value="Tier 3">Tier 3</option>
-                            </select>
+                            <label>Temperature</label>
+                            <input class="form-control" placeholder="Enter temperature in celcius" type="text" aria-label="default input example"
+                                name="temp">
                         </div>
                     </div>
 
                     <!-- 6th row -->
                     <div class="row my-2">
                         <div class="col">
-                            <label>Outlet Type</label>
-                            <select class="form-select" aria-label="Default select example" name="Outlet_Type">
-                                <option selected>Select Outlet Type</option>
-                                <option value="Grocery Store">Grocery Store</option>
-                                <option value="Supermarket Type1">Supermarket Type1</option>
-                                <option value="Supermarket Type2">Supermarket Type2</option>
-                                <option value="Supermarket Type3">Supermarket Type3</option>
-                            </select>
+                            <label>Wind Speed</label>
+                            <input class="form-control" placeholder="Enter wind speed in kmph" type="text" aria-label="default input example"
+                                name="wind">
                         </div>
 
                         <div class="col">
-                            <label>Outlet Type</label>
-                            <select class="form-select" aria-label="Default select example" name="Outlet_Type">
-                                <option selected>Select Outlet Type</option>
-                                <option value="Grocery Store">Grocery Store</option>
-                                <option value="Supermarket Type1">Supermarket Type1</option>
-                                <option value="Supermarket Type2">Supermarket Type2</option>
-                                <option value="Supermarket Type3">Supermarket Type3</option>
-                            </select>
+                            <label>Humidity</label>
+                            <input class="form-control" placeholder="Enter humidity in %" type="text" aria-label="default input example"
+                                name="humidity">
                         </div>
 
                     </div>
@@ -256,6 +279,7 @@
         </div>
 
     </div>
+    
     <footer class="u-align-center u-clearfix u-footer u-grey-80 footer" id="sec-a78b"><div class="u-align-left u-clearfix u-sheet u-sheet-1">
         <a href="https://github.com/shivanshka/Rental_Bike_Share_Prediction.git" class="github" data-image-width="100" data-image-height="100" title="Source code" target="_blank">
           <img src="{{ url_for('static', filename='img/git.png') }}" class="github_image">

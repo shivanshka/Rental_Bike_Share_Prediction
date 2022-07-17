@@ -23,8 +23,9 @@ def bulk_predict():
     try:
         file = request.files.get("files")
         folder = "Prediction_Batch_Files"
-        if file is not None:
-            flash("File uploaded!!","success")
+
+        flash("File uploaded!!","success")
+
         if os.path.isdir(folder):
             shutil.rmtree(folder)
         os.mkdir(folder)
@@ -35,24 +36,38 @@ def bulk_predict():
         output_file = pred.initiate_bulk_prediction()
         path = os.path.basename(output_file)
 
-        if path is not None:
-            flash("Prediction File generated!!","success")
+        flash("Prediction File generated!!","success")
         return send_file(output_file,as_attachment=True)
+
     except Exception as e:
-        flash('Something went wrong', 'danger')
+        flash(f'Something went wrong: {e}', 'danger')
         return redirect(url_for('home'))
 
-@app.route("/single_page", methods =["GET","POST"])
+@app.route("/single_predict", methods =["POST"])
 @cross_origin()
-def single_page():
-    return render_template("Single-Prediction.html")
+def single_predict():
+    try:   
+        data = {'date': request.form['date'],
+                'month': int(request.form['month']),
+                'hour': int(request.form['hour']),
+                'season': int(request.form['season']),
+                'weekday': int(request.form['weekday']),
+                'is_holiday': int(request.form['is_holiday']),
+                'working_day': int(request.form['working']),
+                'weather_sit': int(request.form['weather_sit']),
+                'is_covid': int(request.form['is_covid']),
+                'temp': float(request.form['temp']),
+                'wind': float(request.form['wind']),
+                'humidity': float(request.form['humidity'])}
 
-@app.route("/contact", methods =["GET"])
-@cross_origin()
-def contact():
-    return render_template("Contact.html")
-
-
+        pred = Prediction()
+        output = pred.initiate_single_prediction(data)
+        flash(f"Predicted Demand for Bike for given conditions: {output}","success")
+        return redirect(url_for('home'))
+    except Exception as e:
+        flash(f'Something went wrong: {e}', 'danger')
+        return redirect(url_for('home'))
+    
 
 @app.route("/start_train", methods=['GET', 'POST'])
 @cross_origin()
@@ -61,7 +76,8 @@ def trainRouteClient():
         train_obj = Training_Pipeline()
         train_obj.run_training_pipeline() # training the model for the files in the table
     except Exception as e:
-        return f"Error occured : {e}"
+        flash(f'Something went wrong: {e}', 'danger')
+        return redirect(url_for('home'))
 
 
 if __name__=="__main__":
