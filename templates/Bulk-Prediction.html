@@ -70,11 +70,11 @@
         <div class="u-form u-form-1">
           <form action="/bulk_page" method="POST" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="Prediction Path" style="padding: 10px;">
             <div class="u-form-group">
-              <label for="email-c777" class="u-label u-label-1">Path for data</label>
-              <input type="text" placeholder="Enter a valid path for data" id="filepath" name="filepath" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-radius-19 u-white" required="required">
+              <label for="data" class="u-label u-label-1">Path for data</label>
+              <input type="file" multiple class="form-control" id="files" name="files">
             </div>
             <div class="u-align-center u-form-group u-form-submit">
-              <a href="{{ url_for('bulk_page') }}" id="predict" class="u-btn u-btn-round u-btn-submit u-button-style u-palette-3-base u-radius-28 u-btn-1">Predict<br>
+              <a href="{{ url_for('bulk_page') }}" id="predict" class="u-btn u-btn-round u-btn-submit u-button-style u-palette-3-base u-radius-28 u-btn-1" data-path = "Prediction_Batch_File">Predict<br>
               </a>
               <input type="submit" value="submit" class="u-form-control-hidden">
             </div>
@@ -98,32 +98,6 @@
         <img class="u-image u-image-round u-preserve-proportions u-radius-10 u-image-2" src="{{ url_for('static', filename='img/linkied.png') }}" alt="" data-image-width="225" data-image-height="225" data-href="https://www.linkedin.com/in/shivansh-ka" data-target="_blank">
         <p class="u-text u-text-default u-text-1">Created by Shivansh Kaushal and Chirag Sharma</p>
       </div></footer>
-
-      <div id="loading"><div class="loader"></div></div>
-      <!-- Bootstrap core JavaScript -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-      <script>
-        $(document).ready(function(){
-          $('#loading').hide();
-          $("#predict").click(function(e){
-            e.preventDefault();
-            $('#loading').show();
-            var path = $("#filepath").val();
-            $.ajax({
-              //change url below
-              url : "/bulk_page",
-              type: "POST",
-              data: {filepath:path},
-              success: function(response){
-                $(".result").html('<p>' + response + '</p>');
-                $('#loading').hide();
-              }
-            });
-            
-          });
-        });
-      </script>
+    
   </body>
 </html>

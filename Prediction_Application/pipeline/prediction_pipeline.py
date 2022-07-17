@@ -5,7 +5,7 @@ from Prediction_Application.exception import ApplicationException
 from Prediction_Application.logger import logging
 from Prediction_Application.constant import *
 from Prediction_Application.util.util import load_object, read_yaml_file, save_data
-import os,sys
+import os,sys, shutil
 import pandas as pd
 import numpy as np
 
@@ -13,7 +13,8 @@ class Prediction:
 
     def __init__(self, path=None):
         logging.info(f"\n{'*'*20} Prediction Pipeline Initiated {'*'*20}\n")
-        self.path = path
+        self.folder = "Prediction_Batch_Files"
+        self.path=path = os.path.join(self.folder,os.listdir(self.folder)[0])
         self.fe_obj = load_object(file_path=os.path.join(ROOT_DIR,PIKLE_FOLDER_NAME_KEY,"feat_eng.pkl"))
         self.preprocessing_obj = load_object(file_path=os.path.join(ROOT_DIR,PIKLE_FOLDER_NAME_KEY,"preprocessed.pkl"))
         self.model_obj = load_object(file_path=os.path.join(ROOT_DIR,PIKLE_FOLDER_NAME_KEY,"model.pkl"))
@@ -38,6 +39,7 @@ class Prediction:
                 cols = ['date','year','month','hour','season','weekday','is_holiday','working_day','weather_sit',
                 'is_covid','temp','wind','humidity']
                 data_df = data_df[~data_df.duplicated(subset=["date","month","hour"],keep='last')]
+                data_df.drop(columns="total_count",inplace=True)
 
                 transformed_data = pd.DataFrame(np.c_[date_cols,self.preprocessing_obj.transform(featured_eng_data)],columns=cols)
                 
@@ -49,8 +51,17 @@ class Prediction:
                 data_df["predicted_demand"] = prediction
 
                 output_folder_file_path = os.path.join(ROOT_DIR,"Output Folder",CURRENT_TIME_STAMP,"Predicted.csv")
+                if os.path.exists(os.path.join(ROOT_DIR,"Output Folder")):
+                    shutil.rmtree(os.path.join(ROOT_DIR,"Output Folder"))
+
                 save_data(file_path=output_folder_file_path,data = data_df)
-                return output_folder_file_path
+                zipped_file = os.path.dirname(output_folder_file_path)
+                
+                shutil.make_archive(zipped_file,"zip",zipped_file)
+                shutil.rmtree(zipped_file)
+                shutil.rmtree(self.folder)
+                
+                return zipped_file+".zip"
 
         except Exception as e:
             raise ApplicationException(e,sys) from e 
@@ -68,7 +79,3 @@ class Prediction:
         except Exception as e:
             raise ApplicationException(e,sys) from e
 
-if __name__=="__main__":
-    path = r"G:\Shivansh\iNeuron\Internship\Rental Bike Share Prediction\New folder\Testing_data.csv"
-    pred = Prediction(path)
-    print(pred.initiate_bulk_prediction())
