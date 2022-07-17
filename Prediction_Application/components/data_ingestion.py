@@ -80,14 +80,14 @@ class DataIngestion:
             data_file_path = os.path.join(raw_data_dir,file_name)
             
             # Creating collection in mongoDb for dumping data
-            #self.db.create_and_check_collection()
+            self.db.create_and_check_collection()
             
             # Reading each data files and dumping it into DB
-            #for file in os.listdir(data_file_path):
-             #   data = pd.read_csv(os.path.join(data_file_path,file))
-             #   data_dict = data.to_dict("records")
-             #   logging.info(f"Inserting file: [{file}] into DB")
-             #   self.db.insertall(data_dict)
+            for file in os.listdir(data_file_path):
+                data = pd.read_csv(os.path.join(data_file_path,file))
+                data_dict = data.to_dict("records")
+                logging.info(f"Inserting file: [{file}] into DB")
+                self.db.insertall(data_dict)
 
             # fetching the data set from DB
             logging.info(f"Fetching entire data from DB")
@@ -100,13 +100,13 @@ class DataIngestion:
             train_set = dataframe.loc[dataframe["date"] <= '2022-01-31']
             test_set = dataframe.loc[(dataframe["date"] >= '2022-02-01') & (dataframe["date"] <= '2022-03-31')]
 
-            # logging.info("Inserting new Training Data into DB")
-            #self.db.create_and_check_collection(coll_name="Training")
-            #self.db.insertall(train_set.to_dict("records"))
+            logging.info("Inserting new Training Data into DB")
+            self.db.create_and_check_collection(coll_name="Training")
+            self.db.insertall(train_set.to_dict("records"))
 
-            # logging.info("Inserting new Test Data into DB")
-            #self.db.create_and_check_collection(coll_name="Test")
-            #self.db.insertall(test_set.to_dict("records"))
+            logging.info("Inserting new Test Data into DB")
+            self.db.create_and_check_collection(coll_name="Test")
+            self.db.insertall(test_set.to_dict("records"))
             
             # Setting paths for train and test data
             train_file_path = os.path.join(self.data_ingestion_config.ingested_train_dir,"train.csv")
