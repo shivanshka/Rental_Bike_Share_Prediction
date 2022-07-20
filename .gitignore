@@ -135,3 +135,6 @@ application_logs
 
 Prediction_Application/artifact
 rental_bike_demand
+
+Output Folder
+Prediction_Batch_Files

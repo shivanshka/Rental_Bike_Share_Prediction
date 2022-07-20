@@ -12,6 +12,86 @@ from evidently.model_profile.sections import DataDriftProfileSection
 from evidently.dashboard import Dashboard
 from evidently.dashboard.tabs import DataDriftTab
 
+class Prediction_Validation:
+    def __init__(self,path, data_validation_config : DataValidationConfig):
+        try:
+            self.path=path
+            self.data_validation_config = data_validation_config
+            self.schema_file_path = self.data_validation_config.schema_file_path
+            self.dataset_schema = read_yaml_file(file_path=self.schema_file_path)
+        except Exception as e:
+            raise ApplicationException(e,sys) from e
+
+    def file_name_check(self,file):
+        try:
+            file_check_status = False
+            sample_file_name = self.dataset_schema["SampleFileName"]
+            length_date_stamp = self.dataset_schema["LengthOfDateStampInFile"]
+            length_time_stamp = self.dataset_schema["LengthOfTimeStampInFile"]
+            
+            regex = "Rental_Bike_Share_Data[\_][\d]+[\_][\d]+\.csv"
+            if (re.match(regex,file)):
+                splitAtDot = re.split(".csv",file)
+                splitAtDot = re.split("_",splitAtDot[0])
+                if len(splitAtDot[4]) == length_date_stamp:
+                    if len(splitAtDot[5]) == length_time_stamp:
+                        file_check_status = True
+            
+            if file_check_status==False:
+                raise Exception(f"File name is not as per the Schema in file: [{file}]")
+            
+            return file_check_status
+        except Exception as e:
+            raise ApplicationException(e,sys) from e
+        
+    def column_check(self,file):   
+        try:
+            data = pd.read_csv(file)
+            # Finding no of columns in the dataset
+            no_of_columns = data.shape[1]
+            # Checking if the no of columns in dataset is as per defined schema
+            if no_of_columns != self.dataset_schema["NumberofColumns"]:
+                raise Exception(f"No of columns is not correct in file: [{file}]!!!")
+
+            columns = list(data.columns)
+
+            # Checking for columns name , whether they are as per the defined schema
+            for column in columns:
+                if column not in self.dataset_schema["Columns"].keys():
+                    raise Exception(f"Column :[{column}] in file: [{file}] not available in the Schema!!!")
+
+            # Checking whether any column have entire rows as missing value
+            count = 0
+            col = []
+            for column in columns:            
+                if (len(data[column]) - data[column].count()) == len(data[column]):
+                    count+=1
+                    col.append(column)
+            if count > 0:
+                raise Exception(f"Columns: [{col}] have entire row as missing value") 
+
+            return True
+
+        except Exception as e:
+            raise ApplicationException(e,sys) from e 
+    
+    def validate_dataset_schema(self):
+        try:
+            logging.info("Validating the schema of the dataset")
+            validation_status = False
+            
+            if self.file_name_check(os.path.basename(self.path)) and self.column_check(os.path.join(self.path)):
+                validation_status = True
+                
+            logging.info("Schema Validation Completed")
+            logging.info(f"Is dataset schema as per the defined schema? -> {validation_status}")
+            return validation_status
+            
+        except Exception as e:
+            raise ApplicationException(e,sys) from e
+
+    def __del__(self):
+        logging.info("Prediction Dataset Validation log complete")
 
 class DataValidation:
     def __init__(self, data_validation_config : DataValidationConfig,

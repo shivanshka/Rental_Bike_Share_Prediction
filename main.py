@@ -3,6 +3,7 @@ from flask import Flask, render_template,request, send_file, redirect,url_for,fl
 from flask_cors import CORS, cross_origin
 from Prediction_Application.pipeline.prediction_pipeline import Prediction
 from Prediction_Application.pipeline.training_pipeline import Training_Pipeline
+from Prediction_Application.constant import *
 from Prediction_Application.logger import logging
 import os
 import sys
@@ -10,7 +11,7 @@ import shutil
 
 app = Flask(__name__)
 CORS(app)
-app.secret_key = "any random string"
+app.secret_key = APP_SECRET_KEY
 
 @app.route("/", methods =["GET"])
 @cross_origin()
@@ -22,7 +23,7 @@ def home():
 def bulk_predict():
     try:
         file = request.files.get("files")
-        folder = "Prediction_Batch_Files"
+        folder = PREDICTION_DATA_SAVING_FOLDER_KEY
 
         flash("File uploaded!!","success")
 
@@ -41,6 +42,7 @@ def bulk_predict():
 
     except Exception as e:
         flash(f'Something went wrong: {e}', 'danger')
+        logging.error(e)
         return redirect(url_for('home'))
 
 @app.route("/single_predict", methods =["POST"])
@@ -66,6 +68,7 @@ def single_predict():
         return redirect(url_for('home'))
     except Exception as e:
         flash(f'Something went wrong: {e}', 'danger')
+        logging.error(e)
         return redirect(url_for('home'))
     
 
@@ -77,6 +80,7 @@ def trainRouteClient():
         train_obj.run_training_pipeline() # training the model for the files in the table
     except Exception as e:
         flash(f'Something went wrong: {e}', 'danger')
+        logging.error(e)
         return redirect(url_for('home'))
 
 
