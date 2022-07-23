@@ -112,7 +112,7 @@ class Prediction:
         """
         try:
             logging.info(f"{'*'*20} Single Prediction Mode Selected {'*'*20}")
-            logging.infp(f"Passed Info: [{data}]")
+            logging.info(f"Passed Info: [{data}]")
             
             # Converting passed data into DataFrame
             df = pd.DataFrame([data])
