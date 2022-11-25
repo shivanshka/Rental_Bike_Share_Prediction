@@ -5,11 +5,11 @@ application link : http://rental-bike-demand-us.herokuapp.com/
 The objective of this project is to create a solution for user which can help them to predict demand for rental bikes for Capital Bikes in Washington DC so that they can strategically fullfill demand.
 
 ## Project Demo Video
-link: 
+link: https://www.youtube.com/watch?v=teQsHbj-E50
 
 ## Project Architecture
 We have used layered architecture for carrying out below flow actions:
-image.png
+![img](https://github.com/shivanshka/Rental_Bike_Share_Prediction/blob/main/image.png?raw=true)
 
 ## Tools Used
 - Jupyter Notebook
