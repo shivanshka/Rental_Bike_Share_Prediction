@@ -14,8 +14,8 @@
             padding-right: 20px;
             font-weight: bold;
             width: 100%;
-            background-color: #cce2f5;
-        }
+            background-image: url("./static/img/bikeshare_Adobe.png");
+		}
 
         .file-input {
             font-weight: bold;
@@ -27,7 +27,8 @@
             font-weight: bold;
 
             font-size: 30px;
-            background-color: #f5ed85;
+            /*background-color: #f5ed85;*/
+            background-image: linear-gradient(to right, rgb(200, 255, 0) , rgb(238, 255, 3));
             padding-top: 10px;
             font-weight: bold;
             padding-bottom: 10px;
@@ -81,8 +82,26 @@
             height: 70px;
         }
         .col{
-            padding-left: 50px;
+            padding-left: 20px;
         }
+		.input_box{
+			background-color: #48a78f71;
+            padding: 10px;
+			border: 2px solid rgb(173, 174, 238);
+            border-radius: 10px;
+            color: #d1d1d4;
+            font-weight: bold;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+		}
+        .single_out{
+            background-color: #a7821d71;
+            padding: 10px;
+			border: 2px solid rgb(173, 174, 238);
+            border-radius: 10px; 
+            color: #d1d1d4;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
     </style>
 
 </head>
@@ -109,7 +128,7 @@
         <div class="row">
             <!-- file input column -->
             <div class="col file-input">
-                <form action="/bulk_predict" method="POST" enctype="multipart/form-data">
+                <form class="input_box" action="/bulk_predict" method="POST" enctype="multipart/form-data">
                     <label for="">Upload dataset</label>
                     <div class="input-group mb-3 my-2">
                         <input type="file" multiple class="form-control" id="inputGroupFile01" name="files">
@@ -120,11 +139,7 @@
                         </div>
                     </center>
                 </form>
-            </div>
-
-            <!-- user input column -->
-            <div class="col">
-                <!-- Alert Message -->
+				<!-- Alert Message -->
                 {% with message = get_flashed_messages(with_categories=true) %}
                 {% if message %}
                 {% for category, msg in message %}
@@ -137,7 +152,11 @@
                 {% endfor %}
                 {% endif %}
                 {% endwith %}
-                <form action="/single_predict" method="POST">
+            </div>
+
+            <!-- user input column -->
+            <div class="col">
+                <form class="single_out" action="/single_predict" method="POST">
                     <!-- 1st row -->
                     <div class="row">
                         <div class="col">
