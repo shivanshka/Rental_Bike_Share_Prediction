@@ -72,7 +72,7 @@ def single_predict():
         return redirect(url_for('home'))
     
 
-@app.route("/start_train", methods=['GET', 'POST'])
+@app.route("/start_train", methods=['GET'])
 @cross_origin()
 def trainRouteClient():
     try:
